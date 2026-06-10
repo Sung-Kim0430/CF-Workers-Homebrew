@@ -6,6 +6,15 @@
 
 ### 1. 部署到 Cloudflare
 
+**方式 A：Fork 仓库（推荐）**
+
+1. Fork 本仓库到你的 GitHub 账号
+2. 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)
+3. **Workers & Pages** → **Create** → **Connect to Git**
+4. 选择你 Fork 的仓库并部署
+
+**方式 B：命令行部署**
+
 ```bash
 npm install -g wrangler
 wrangler login

@@ -114,8 +114,8 @@ export function detectRequest(request, config) {
     return { isSuspicious: false, reason: 'ip-whitelisted', action: 'allow' };
   }
 
-  // 2. 检查 Homebrew 客户端（合法）
-  if (/homebrew/i.test(ua)) {
+  // 2. 检查 Homebrew 和 Git 客户端（合法）
+  if (/homebrew/i.test(ua) || /^git\//i.test(ua)) {
     return { isSuspicious: false, reason: 'homebrew-client', action: 'allow' };
   }
 

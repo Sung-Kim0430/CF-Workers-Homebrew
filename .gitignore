@@ -1,0 +1,22 @@
+# 设计文档和 AI 配置
+docs/superpowers/
+CLAUDE.md
+AGENTS.md
+
+# 依赖
+node_modules/
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# 环境变量
+.env
+.env.local
+
+# 日志
+*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db

@@ -66,7 +66,101 @@ source ~/.bashrc
 - ✅ 检测并拦截爬虫和扫描器
 - ✅ 返回 nginx 伪装响应
 - ✅ 可选的边缘缓存
-- ✅ IP 白名单支持
+- ✅ IP 白名单支持（IPv4/IPv6 CIDR）
+
+## 高级配置
+
+### 启用缓存
+
+在 Cloudflare Dashboard 的 Worker 设置中添加环境变量：
+
+```
+CACHE_ENABLED=true
+CACHE_TTL=7200
+```
+
+### 仅缓存 Bottles
+
+如果只想缓存预编译的二进制包（bottles）：
+
+```
+CACHE_BOTTLES=true
+```
+
+### IP 白名单
+
+信任的 IP 地址可以绕过所有检测。支持 CIDR 表示法：
+
+```
+WHITELIST_IPS=192.168.1.0/24,10.0.0.50,2001:db8::/32
+```
+
+## 工作原理
+
+### 请求检测
+
+代理使用多层检测机制：
+
+1. **IP 白名单优先** - 白名单 IP 直接放行
+2. **Homebrew 客户端识别** - User-Agent 包含 "homebrew" 放行
+3. **User-Agent 黑名单** - 拦截已知爬虫/扫描器（nmap、curl、wget 等）
+4. **Header 检查** - 缺少 `Accept-Language` 或 `Accept-Encoding` 的请求被拦截
+5. **默认放行** - 通过所有检测的正常请求
+
+### URL 格式
+
+访问格式：`https://your-worker.workers.dev/<domain>/<path>`
+
+示例：
+- `https://your-worker.workers.dev/formulae.brew.sh/api/formula.json`
+- `https://your-worker.workers.dev/ghcr.io/v2/homebrew/core/wget/manifests/1.21.3`
+
+## 测试
+
+### 本地开发
+
+```bash
+npm run dev
+```
+
+服务器启动在 `http://localhost:8787`
+
+### 测试命令
+
+```bash
+# 测试欢迎页
+curl -H "Accept-Language: en-US" http://localhost:8787/
+
+# 测试爬虫拦截
+curl -A "nmap" http://localhost:8787/formulae.brew.sh/api/formula.json
+
+# 测试正常代理
+curl -A "Homebrew/4.0.0" -H "Accept-Language: en-US" \
+  http://localhost:8787/formulae.brew.sh/api/formula/wget.json
+```
+
+## 故障排除
+
+### 问题：无法访问某些域名
+
+确认 `src/config.js` 中的 `HOMEBREW_DOMAINS` 包含所需域名。添加新域名：
+
+```javascript
+export const HOMEBREW_DOMAINS = {
+  'formulae.brew.sh': 'https://formulae.brew.sh',
+  'new-domain.com': 'https://new-domain.com'  // 添加这行
+};
+```
+
+### 问题：合法请求被拦截
+
+检查请求是否包含必要的 headers。Homebrew 客户端会自动添加，但自定义脚本需要：
+
+```bash
+curl -H "Accept-Language: en-US" -H "Accept-Encoding: gzip" ...
+```
+
+或将你的 IP 添加到白名单。
 
 ## 许可
 

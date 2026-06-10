@@ -1,0 +1,9 @@
+name = "homebrew-proxy"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+CACHE_ENABLED = "false"
+CACHE_BOTTLES = "false"
+CACHE_TTL = "3600"
+WHITELIST_IPS = ""

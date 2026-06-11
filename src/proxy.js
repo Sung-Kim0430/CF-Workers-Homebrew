@@ -6,12 +6,17 @@ function parseTargetDomain(url) {
 
   if (segments.length === 0) return null;
 
-  // 特殊处理 ghcr.io - 需要保留 v2/homebrew/core 前缀
-  if (segments[0] === 'ghcr.io' && segments.length >= 4 &&
-      segments[1] === 'v2' && segments[2] === 'homebrew' && segments[3] === 'core') {
-    const domain = segments.slice(0, 4).join('/');  // ghcr.io/v2/homebrew/core
-    if (!HOMEBREW_DOMAINS[domain]) return null;
-    const remainingPath = '/' + segments.slice(4).join('/');
+  // 特殊处理 ghcr.io - 可能是 API 调用或直接文件下载
+  if (segments[0] === 'ghcr.io') {
+    // 情况1: API 调用 - ghcr.io/v2/homebrew/core/<formula>/manifests/...
+    if (segments.length >= 4 && segments[1] === 'v2' && segments[2] === 'homebrew' && segments[3] === 'core') {
+      const domain = 'ghcr.io/v2/homebrew/core';
+      const remainingPath = '/' + segments.slice(4).join('/');
+      return { domain, remainingPath };
+    }
+    // 情况2: 直接下载 - ghcr.io/v2/homebrew/core/filename.tar.gz
+    const domain = 'ghcr.io';
+    const remainingPath = '/' + segments.slice(1).join('/');
     return { domain, remainingPath };
   }
 

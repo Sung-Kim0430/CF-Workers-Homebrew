@@ -3,6 +3,7 @@ import { detectRequest } from './detector.js';
 import { generateWelcomePage, generate403Page } from './responses.js';
 import { proxyRequest } from './proxy.js';
 import { getCachedResponse, cacheResponse } from './cache.js';
+import { handleBottleDownload } from './bottle.js';
 
 export default {
   async fetch(request, env, ctx) {
@@ -25,6 +26,12 @@ export default {
       if (isBrowser) {
         return generateWelcomePage();
       }
+    }
+
+    // 特殊处理：bottle 下载
+    if (url.pathname.includes('.bottle.tar.gz')) {
+      const bottleResp = await handleBottleDownload(request);
+      if (bottleResp) return bottleResp;
     }
 
     // 正常代理请求

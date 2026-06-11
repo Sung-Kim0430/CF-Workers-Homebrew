@@ -51,7 +51,8 @@ brew update
 
 ## 功能特性
 
-- ✅ 反向代理所有 Homebrew 域名
+- ✅ 反向代理所有 Homebrew 域名（GitHub、API、ghcr.io bottles）
+- ✅ **ghcr.io bottle 下载加速**（OAuth 认证，支持所有架构）
 - ✅ 智能检测并拦截爬虫/扫描器
 - ✅ 返回 nginx 伪装响应
 - ✅ 可选边缘缓存（bottles/全局）

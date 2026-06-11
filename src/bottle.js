@@ -1,5 +1,3 @@
-import { debug } from './logger.js';
-
 // ghcr.io OAuth token 缓存（按 formula 缓存）
 const tokenCache = new Map();
 
@@ -36,22 +34,13 @@ export async function handleBottleDownload(request) {
   // 匹配: /ghcr.io/v2/homebrew/core/<formula>-<version>.<arch>.bottle.tar.gz
   const match = path.match(/\/ghcr\.io\/v2\/homebrew\/core\/(.+?)-([\d.]+(?:_\d+)?)\.([\w_]+)\.bottle\.tar\.gz$/);
 
-  if (!match) {
-    debug('[Bottle] No match for path:', path);
-    return null;
-  }
+  if (!match) return null;
 
   const [, formula, version, arch] = match;
-  debug('[Bottle] Matched:', { formula, version, arch });
 
   try {
     const token = await getGHCRToken(formula);
-    if (!token) {
-      debug('[Bottle] Failed to get token');
-      return null;
-    }
-
-    debug('[Bottle] Got token, fetching manifest');
+    if (!token) return null;
 
     const headers = { 'Authorization': `Bearer ${token}` };
 
@@ -61,13 +50,9 @@ export async function handleBottleDownload(request) {
       headers: { ...headers, 'Accept': 'application/vnd.oci.image.index.v1+json' }
     });
 
-    if (!manifestResp.ok) {
-      debug('[Bottle] Manifest failed:', manifestResp.status);
-      return null;
-    }
+    if (!manifestResp.ok) return null;
 
     const manifest = await manifestResp.json();
-    debug('[Bottle] Got manifest with', manifest.manifests?.length, 'items');
 
     // 2. 找到匹配架构的 digest
     let blobDigest = null;
@@ -75,15 +60,11 @@ export async function handleBottleDownload(request) {
       const refName = m.annotations?.['org.opencontainers.image.ref.name'] || '';
       if (refName.includes(arch)) {
         blobDigest = m.digest;
-        debug('[Bottle] Found digest for', arch, ':', blobDigest);
         break;
       }
     }
 
-    if (!blobDigest) {
-      debug('[Bottle] No digest found for arch:', arch);
-      return null;
-    }
+    if (!blobDigest) return null;
 
     // 3. 获取 layer manifest
     const layerManifestUrl = `https://ghcr.io/v2/homebrew/core/${formula}/manifests/${blobDigest}`;
@@ -94,31 +75,18 @@ export async function handleBottleDownload(request) {
       }
     });
 
-    if (!layerResp.ok) {
-      debug('[Bottle] Layer manifest failed:', layerResp.status);
-      return null;
-    }
+    if (!layerResp.ok) return null;
 
     const layerManifest = await layerResp.json();
     const layer = layerManifest.layers?.[0];
 
-    if (!layer) {
-      debug('[Bottle] No layers found');
-      return null;
-    }
-
-    debug('[Bottle] Layer digest:', layer.digest, 'size:', layer.size);
+    if (!layer) return null;
 
     // 4. 下载 blob
     const blobUrl = `https://ghcr.io/v2/homebrew/core/${formula}/blobs/${layer.digest}`;
     const blobResp = await fetch(blobUrl, { headers });
 
-    if (!blobResp.ok) {
-      debug('[Bottle] Blob download failed:', blobResp.status);
-      return null;
-    }
-
-    debug('[Bottle] Success! Returning blob');
+    if (!blobResp.ok) return null;
 
     // 5. 返回响应
     return new Response(blobResp.body, {
@@ -129,7 +97,6 @@ export async function handleBottleDownload(request) {
       }
     });
   } catch (error) {
-    debug('[Bottle] Error:', error.message);
     return null;
   }
 }

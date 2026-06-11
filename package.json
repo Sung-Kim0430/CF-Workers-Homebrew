@@ -5,9 +5,8 @@
   "description": "Cloudflare Worker reverse proxy for Homebrew with bot detection",
   "main": "src/index.js",
   "scripts": {
-    "build": "node build.js",
     "dev": "wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "wrangler deploy"
   },
   "keywords": [
     "cloudflare-workers",
@@ -17,7 +16,6 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.28.0",
     "wrangler": "^4.99.0"
   }
 }

@@ -4,6 +4,7 @@ export const HOMEBREW_DOMAINS = {
   'api.github.com': 'https://api.github.com',
   'raw.githubusercontent.com': 'https://raw.githubusercontent.com',
   'ghcr.io': 'https://ghcr.io',
+  'ghcr.io/v2/homebrew/core': 'https://ghcr.io/v2/homebrew/core',
   'pkg-containers.githubusercontent.com': 'https://pkg-containers.githubusercontent.com',
   'github.com': 'https://github.com',
   'codeload.github.com': 'https://codeload.github.com'

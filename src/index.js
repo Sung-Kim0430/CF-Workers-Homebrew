@@ -4,9 +4,11 @@ import { generateWelcomePage, generate403Page } from './responses.js';
 import { proxyRequest } from './proxy.js';
 import { getCachedResponse, cacheResponse } from './cache.js';
 import { handleBottleDownload } from './bottle.js';
+import { initLogger } from './logger.js';
 
 export default {
   async fetch(request, env, ctx) {
+    initLogger(env);
     const config = getConfig(env);
     const url = new URL(request.url);
 

@@ -126,11 +126,12 @@ export function detectRequest(request, config) {
     }
   }
 
-  // 4. 检查关键 headers 缺失
+  // 4. 检查关键 headers 缺失（HEAD 请求豁免）
+  const method = request.method;
   const hasAcceptLang = request.headers.has('Accept-Language');
   const hasAcceptEnc = request.headers.has('Accept-Encoding');
 
-  if (!hasAcceptLang || !hasAcceptEnc) {
+  if (method !== 'HEAD' && (!hasAcceptLang || !hasAcceptEnc)) {
     return { isSuspicious: true, reason: 'missing-headers', action: 'block' };
   }
 

@@ -58,6 +58,9 @@ brew update
 - ✅ 可选边缘缓存（bottles/全局）
 - ✅ IP 白名单（IPv4/IPv6 CIDR）
 
+**已知限制：**
+- ⚠️ Homebrew Cask 应用下载（`release-assets.githubusercontent.com`）无法通过环境变量代理，需要自定义域名 + DNS 配置（高级用户）
+
 ## 文档
 
 - 📖 [部署指南](docs/deployment.md) - 详细部署步骤、环境变量配置

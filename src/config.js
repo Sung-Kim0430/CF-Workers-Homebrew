@@ -3,11 +3,13 @@ export const HOMEBREW_DOMAINS = {
   'formulae.brew.sh': 'https://formulae.brew.sh',
   'api.github.com': 'https://api.github.com',
   'raw.githubusercontent.com': 'https://raw.githubusercontent.com',
+  'github.com': 'https://github.com',
+  'codeload.github.com': 'https://codeload.github.com',
+  'objects.githubusercontent.com': 'https://objects.githubusercontent.com',
+  'release-assets.githubusercontent.com': 'https://release-assets.githubusercontent.com',
   'ghcr.io': 'https://ghcr.io',
   'ghcr.io/v2/homebrew/core': 'https://ghcr.io/v2/homebrew/core',
-  'pkg-containers.githubusercontent.com': 'https://pkg-containers.githubusercontent.com',
-  'github.com': 'https://github.com',
-  'codeload.github.com': 'https://codeload.github.com'
+  'pkg-containers.githubusercontent.com': 'https://pkg-containers.githubusercontent.com'
 };
 
 // 读取环境变量配置

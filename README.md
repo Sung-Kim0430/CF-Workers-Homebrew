@@ -58,8 +58,11 @@ brew update
 - ✅ 可选边缘缓存（bottles/全局）
 - ✅ IP 白名单（IPv4/IPv6 CIDR）
 
-**已知限制：**
-- ⚠️ Homebrew Cask 应用下载（`release-assets.githubusercontent.com`）无法通过环境变量代理，需要自定义域名 + DNS 配置（高级用户）
+**加速覆盖范围：**
+- ✅ `brew update` - Git 仓库同步
+- ✅ `brew install` - 公式下载（bottles）
+- ✅ `brew search/info` - API 查询
+- ⚠️ `brew install --cask` - Cask 应用下载（`release-assets.githubusercontent.com`）暂不支持环境变量代理，将走直连
 
 ## 文档
 

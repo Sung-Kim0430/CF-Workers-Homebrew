@@ -28,8 +28,8 @@ export default {
       }
     }
 
-    // 特殊处理：bottle 下载
-    if (url.pathname.includes('.bottle.tar.gz')) {
+    // 特殊处理：ghcr.io bottle 相关请求
+    if (url.pathname.includes('ghcr.io/v2/homebrew/core')) {
       const bottleResp = await handleBottleDownload(request);
       if (bottleResp) return bottleResp;
     }
